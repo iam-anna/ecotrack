@@ -3,9 +3,11 @@ package com.fiapos.ecotrack.ui.home
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,6 +17,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.fiapos.ecotrack.ui.components.ArrowShapedButton
+import com.fiapos.ecotrack.ui.components.ArrowShapedButtonColor
 import com.fiapos.ecotrack.ui.components.CategoryProgressCard
 import com.fiapos.ecotrack.ui.components.EcotrackLogo
 import com.fiapos.ecotrack.ui.components.FootprintRegisterType
@@ -24,7 +28,7 @@ import com.fiapos.ecotrack.ui.components.FootprintRegisterType
 fun HomeScreen() {
     var progress = 0.35f
 
-    Column (modifier = Modifier.fillMaxWidth()) {
+    Column (modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState())) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -75,32 +79,72 @@ fun HomeScreen() {
             .padding(
                 top = 12.dp,
                 start = 24.dp,
-                end = 24.dp
-            )
+                end = 24.dp,
+                bottom = 42.dp
+            ),
+            verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
-            Text(
-                text = "Breakdown por Categoria",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF374151)
-            )
-
-            Row (horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                CategoryProgressCard(
-                    FootprintRegisterType.FOOD,
-                    modifier = Modifier.weight(1f)
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(
+                    text = "Breakdown por Categoria",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF374151)
                 )
 
-                CategoryProgressCard(
-                    FootprintRegisterType.TRANSPORT,
-                    modifier = Modifier.weight(1f)
-                )
+                Row (horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    CategoryProgressCard(
+                        "87",
+                        FootprintRegisterType.TRANSPORT,
+                        0.7f,
+                        modifier = Modifier.weight(1f)
+                    )
+
+                    CategoryProgressCard(
+                        footprint = "55",
+                        FootprintRegisterType.FOOD,
+                        0.34f,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
             }
+
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(
+                    text = "Calcular Emissões",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF374151)
+                )
+
+                Column (verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    ArrowShapedButton(
+                        "🚗",
+                        "Calcular Transporte",
+                        "Carros, motos, ônibus e mais",
+                        ArrowShapedButtonColor.BLUE
+                    )
+
+                    ArrowShapedButton(
+                        "🥦",
+                        "Calcular Alimentação",
+                        "Carne, vegetais e industrializados",
+                        ArrowShapedButtonColor.GREEN
+                    )
+
+                    ArrowShapedButton(
+                        "📊",
+                        "Ver Histórico",
+                        "Relatórios e progresso",
+                        ArrowShapedButtonColor.PURPLE
+                    )
+                }
+            }
+
+            Callout()
         }
     }
 }
-
-
 
 @Composable
 fun FootprintCard(progress: Float) {
@@ -207,7 +251,7 @@ fun CarbonProgressBar(
                 .fillMaxWidth()
                 .height(20.dp)
                 .background(
-                    color = Color(0xFFD1D5DB),
+                    color = Color(0xFFF1F5F9),
                     shape = RoundedCornerShape(50)
                 )
         ) {
@@ -228,5 +272,41 @@ fun CarbonProgressBar(
 
             )
         }
+    }
+}
+
+@Composable
+fun Callout() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        Color(0xFFFEF3C7),
+                        Color(0xFFFDE68A)
+                    )
+                ),
+                shape = RoundedCornerShape(16.dp)
+            )
+            .padding(all = 16.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .size(48.dp)
+                .background(
+                    color = Color(0x99FFFFFF),
+                    shape = RoundedCornerShape(16.dp)
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Text("💡", fontSize = 20.sp)
+        }
+        Text(
+            text = "**Dica do dia:** Reduzir o consumo de carne vermelha 2x por semana pode diminuir até 15% da sua pegada de carbono alimentar.",
+            fontSize = 12.sp,
+            color = Color(0xFF92400E)
+        )
     }
 }

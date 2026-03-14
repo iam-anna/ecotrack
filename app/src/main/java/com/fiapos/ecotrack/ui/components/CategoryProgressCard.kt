@@ -18,18 +18,29 @@ enum class FootprintRegisterType {
 
 @Composable
 fun CategoryProgressCard(
+    footprint: String,
     type: FootprintRegisterType,
+    progress: Float,
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
-            .height(120.dp)
             .background(
                 color = Color.White,
                 shape = RoundedCornerShape(20.dp)
             )
             .padding(16.dp)
     ) {
+        Text(
+            text = when(type) {
+                FootprintRegisterType.FOOD -> "\uD83E\uDD66"
+                FootprintRegisterType.TRANSPORT -> "\uD83D\uDE97"
+            },
+            fontSize = 24.sp
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
         Text(
             text = when(type) {
                 FootprintRegisterType.FOOD -> "Alimentação"
@@ -41,7 +52,43 @@ fun CategoryProgressCard(
 
         Row {
             Text(
-                text = "78"
+                text = footprint,
+                fontSize = 22.sp,
+                fontWeight = FontWeight.ExtraBold,
+                color = Color(0xFF111827)
+            )
+
+            Text(
+                text = "kg",
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Medium,
+                color = Color(0xFF9CA3AF)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(6.dp)
+                .background(
+                    color = Color(0xFFF1F5F9),
+                    shape = RoundedCornerShape(50)
+                )
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .fillMaxWidth(progress)
+                    .background(
+                        color = when(type) {
+                            FootprintRegisterType.FOOD -> Color(0xFF388DF8)
+                            FootprintRegisterType.TRANSPORT -> Color(0xFF4ADE80)
+                        },
+                        shape = RoundedCornerShape(50)
+                    )
+
             )
         }
     }
