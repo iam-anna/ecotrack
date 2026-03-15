@@ -4,12 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.material3.Scaffold
-import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.fiapos.ecotrack.ui.screen.OnboardingScreen
-import com.fiapos.ecotrack.ui.theme.ECOTRACKTheme
-import com.fiapos.ecotrack.viewmodel.OnboardingViewModel
+import com.fiapos.ecotrack.navigation.NavGraph
+
 
 class MainActivity : ComponentActivity() {
 
@@ -18,11 +14,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            ECOTRACKTheme {
-                val viewModel: OnboardingViewModel = viewModel()
-
-                OnboardingScreen(viewModel = viewModel)
-            }
+            NavGraph()
         }
     }
 }

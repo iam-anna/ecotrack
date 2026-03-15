@@ -1,17 +1,13 @@
-package com.fiapos.ecotrack.ui.screen
+package com.fiapos.ecotrack.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -20,12 +16,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fiapos.ecotrack.R
-import com.fiapos.ecotrack.viewmodel.OnboardingViewModel
+import com.fiapos.ecotrack.controller.MainController
+import com.fiapos.ecotrack.ui.components.EcotrackLogo
+import com.fiapos.ecotrack.ui.components.PersonalizedButton
 
 @Composable
-fun OnboardingScreen(
-    viewModel: OnboardingViewModel
-) {
+fun OnboardingScreen(controller: MainController) {
 
     val gradient = Brush.verticalGradient(
         colors = listOf(
@@ -84,35 +80,9 @@ fun OnboardingScreen(
 
             Spacer(modifier = Modifier.height(22.dp))
 
-            Button(
-                onClick = { viewModel.onStartClicked() },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp)
-                    .shadow(8.dp, RoundedCornerShape(30.dp)),
-                shape = RoundedCornerShape(30.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF1FA463)
-                )
-            ) {
-
-                Text(
-                    text = "Começar",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
-                )
-
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = "Junte-se a 50k pessoas reduzindo emissões 🌍",
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Normal,
-                color = Color(0xFF6B8F76),
-                textAlign = TextAlign.Center
+            PersonalizedButton(
+                text = "Começar",
+                onclick = { controller.startApp() }
             )
 
             Spacer(modifier = Modifier.height(60.dp))
@@ -127,17 +97,7 @@ fun Header() {
         verticalAlignment = Alignment.CenterVertically
     ) {
 
-        Box(
-            modifier = Modifier
-                .size(38.dp)
-                .background(Color(0xFF1FA463), CircleShape),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = "🌿",
-                fontSize = 18.sp
-            )
-        }
+        EcotrackLogo()
 
         Spacer(modifier = Modifier.width(10.dp))
 

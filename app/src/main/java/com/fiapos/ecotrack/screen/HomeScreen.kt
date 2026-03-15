@@ -1,6 +1,5 @@
-package com.fiapos.ecotrack.ui.home
+package com.fiapos.ecotrack.screen
 
-import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -8,10 +7,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -34,7 +31,6 @@ fun HomeScreen() {
                 .fillMaxWidth()
                 .background(
                     brush = Brush.verticalGradient(
-
                         colors = listOf(
                             Color(0xFFF0FDF4),
                             Color(0xFFDCFCE7)
