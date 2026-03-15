@@ -2,12 +2,14 @@ package com.fiapos.ecotrack
 
 import android.R
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -46,26 +48,80 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.ui.unit.dp
+import com.fiapos.ecotrack.domain.model.EmissionFactor
+import com.fiapos.ecotrack.domain.model.EstimateRequest
+import com.fiapos.ecotrack.domain.model.Parameters
+import com.fiapos.ecotrack.services.RetrofitClient
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 class TransportActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            var km by remember { mutableStateOf("") }
+            var transport by remember { mutableStateOf("car") }
+            var result by remember { mutableStateOf("") }
+
             ECOTRACKTheme {
                 Column(
                     modifier = Modifier.fillMaxSize()
                 ) {
                     Header()
-                    KilometerInput()
-                    TransportSelectionContainer()
+                    KilometerInput(
+                        value = km,
+                        onValueChange = { km = it }
+                    )
+                    TransportSelectionContainer(
+                        selected = transport,
+                        onSelect = { transport = it }
+                    )
                     Spacer(modifier = Modifier.weight(1f))
-                    CalculateSection()
+                    CalculateSection(
+                        km = km,
+                        transport = transport,
+                        onResult = { result = it }
+                    )
+
+                    if (result.isNotEmpty()) {
+                        Text(
+                            text = result,
+                            fontSize = 18.sp,
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    }
+
                     TabBar()
                 }
             }
         }
     }
+}
+
+fun getActivityId(type: String): String {
+
+    return when(type){
+
+        "car" ->
+            "passenger_vehicle-vehicle_type_medium_car-fuel_source_diesel-engine_size_na-vehicle_age_na-vehicle_weight_na"
+
+        "motorcycle" ->
+            "passenger_vehicle-vehicle_type_motorcycle-fuel_source_gasoline-engine_size_na-vehicle_age_na-vehicle_weight_na"
+
+        "bus" ->
+            "passenger_vehicle-vehicle_type_bus-fuel_source_na-engine_size_na-vehicle_age_na-vehicle_weight_na"
+
+        "flight" ->
+            "passenger_flight-route_type_international-aircraft_type_na-distance_na-class_na-rf_na"
+
+        else ->
+            "passenger_vehicle-vehicle_type_medium_car-fuel_source_diesel-engine_size_na-vehicle_age_na-vehicle_weight_na"
+    }
+
 }
 
 val textColors = Color(red = 3, green = 105, blue = 161)
@@ -180,7 +236,10 @@ fun TabBar() {
 }
 
 @Composable
-fun KilometerInput() {
+fun KilometerInput(
+    value: String,
+    onValueChange: (String) -> Unit
+) {
     var text by remember { mutableStateOf("") }
 
     Column(
@@ -198,8 +257,8 @@ fun KilometerInput() {
         Spacer(modifier = Modifier.height(8.dp))
 
         OutlinedTextField(
-            value = text,
-            onValueChange = { text = it },
+            value = value,
+            onValueChange = onValueChange,
             modifier = Modifier.fillMaxWidth(),
             placeholder = {
                 Text(text = "Ex: 25", color = Color.Gray)
@@ -219,22 +278,30 @@ fun KilometerInput() {
 }
 
 @Composable
-fun TransportCard(icon: String = "🔴", text: String = "Default", selected: Boolean = false) {
-    Column (
+fun TransportCard(
+    icon: String,
+    text: String,
+    selected: Boolean,
+    onClick: () -> Unit
+) {
+
+    val borderColor = if (selected) Color(22,163,74) else Color.Gray
+    val backgroundColor = if (selected) Color(220,252,231) else Color.White
+
+    Column(
         modifier = Modifier
-            .border(width = 0.5.dp, color = Color.Gray, shape = RoundedCornerShape(16.dp))
+            .border(1.dp, borderColor, RoundedCornerShape(16.dp))
+            .background(backgroundColor, RoundedCornerShape(16.dp))
+            .clickable { onClick() }
             .height(120.dp)
             .width(150.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(
-            text = icon,
-            fontSize = 22.sp
-        )
-        Spacer(
-            modifier = Modifier.height(5.dp)
-        )
+        Text(icon, fontSize = 22.sp)
+
+        Spacer(modifier = Modifier.height(5.dp))
+
         Text(
             text = text,
             fontSize = 14.sp,
@@ -244,7 +311,10 @@ fun TransportCard(icon: String = "🔴", text: String = "Default", selected: Boo
 }
 
 @Composable
-fun TransportSelectionContainer() {
+fun TransportSelectionContainer(
+    selected: String,
+    onSelect: (String) -> Unit
+) {
     Column(
         modifier = Modifier
             .padding(16.dp)
@@ -264,8 +334,8 @@ fun TransportSelectionContainer() {
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            TransportCard("🚗","Carro")
-            TransportCard("🏍️", "Moto")
+            TransportCard("🚗","Carro", selected == "car") { onSelect("car") }
+            TransportCard("🏍️", "Moto", selected == "motorcycle") { onSelect("motorcycle") }
         }
 
         Spacer(modifier = Modifier.height(18.dp))
@@ -275,14 +345,18 @@ fun TransportSelectionContainer() {
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            TransportCard("🚌", "Ônibus")
-            TransportCard("✈️", "Avião")
+            TransportCard("🚌", "Ônibus", selected == "bus") { onSelect("bus") }
+            TransportCard("✈️", "Avião", selected == "flight") { onSelect("flight") }
         }
     }
 }
 
 @Composable
-fun CalculateSection() {
+fun CalculateSection(
+    km: String,
+    transport: String,
+    onResult: (String) -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -291,7 +365,52 @@ fun CalculateSection() {
         verticalArrangement = Arrangement.Center
     ) {
         Button(
-            onClick = {},
+            onClick = {
+                val distance = km.toDoubleOrNull()
+                val activityId = getActivityId(transport)
+
+                Log.d("CLIMATIQ", "Transport: $transport")
+                Log.d("CLIMATIQ", "ActivityID: $activityId")
+                Log.d("CLIMATIQ", "Distance: $distance")
+
+                if(distance == null){
+                    onResult("Digite um valor válido")
+                    return@Button
+                }
+
+                CoroutineScope(Dispatchers.IO).launch {
+
+                    try {
+
+                        val request = EstimateRequest(
+                            emission_factor = EmissionFactor(
+                                activity_id = activityId
+                            ),
+                            parameters = Parameters(distance)
+                        )
+
+                        val response = RetrofitClient.api.calculate(request)
+
+                        val resultText = "Emissão: ${response.co2e} kg CO₂"
+
+                        withContext(Dispatchers.Main){
+                            onResult(resultText)
+                        }
+
+                    }catch(e: Exception){
+                        if(e is retrofit2.HttpException){
+                            val errorBody = e.response()?.errorBody()?.string()
+                            Log.e("CLIMATIQ", "HTTP ERROR: $errorBody")
+                        }
+                        withContext(Dispatchers.Main){
+                            onResult("Erro ao calcular")
+                        }
+
+                    }
+
+                }
+
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp),
@@ -317,12 +436,12 @@ fun GreetingPreview2() {
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
-            Header()
-            KilometerInput()
-            TransportSelectionContainer()
-            Spacer(modifier = Modifier.weight(1f))
-            CalculateSection()
-            TabBar()
+//            Header()
+//            KilometerInput()
+//            TransportSelectionContainer()
+//            Spacer(modifier = Modifier.weight(1f))
+//            CalculateSection()
+//            TabBar()
         }
     }
 }
