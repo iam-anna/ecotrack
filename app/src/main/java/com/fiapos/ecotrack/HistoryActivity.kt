@@ -37,7 +37,15 @@ class HistoryActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ECOTRACKTheme {
-
+                Column(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Header()
+                    ReportSection()
+                    HistorySection()
+                    Spacer(modifier = Modifier.weight(1f))
+                    TabBar()
+                }
             }
         }
     }
