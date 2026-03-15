@@ -24,8 +24,7 @@ import com.fiapos.ecotrack.viewmodel.OnboardingViewModel
 
 @Composable
 fun OnboardingScreen(
-    viewModel: OnboardingViewModel,
-    modifier: Modifier = Modifier
+    viewModel: OnboardingViewModel
 ) {
 
     val gradient = Brush.verticalGradient(
@@ -36,7 +35,7 @@ fun OnboardingScreen(
     )
 
     Box(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
             .background(gradient)
     ) {
