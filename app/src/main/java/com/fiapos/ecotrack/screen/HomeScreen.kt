@@ -24,8 +24,6 @@ import com.fiapos.ecotrack.ui.components.FootprintRegisterType
 
 @Composable
 fun HomeScreen(controller: MainController) {
-    var progress = 0.35f
-
     Column (modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState())) {
         Column(
             modifier = Modifier
@@ -136,7 +134,7 @@ fun HomeScreen(controller: MainController) {
                         "Ver Histórico",
                         "Relatórios e progresso",
                         EcotrackColor.PURPLE,
-                        onClick = { controller.goToHome() }
+                        onClick = { controller.goToHistory() }
                     )
                 }
             }

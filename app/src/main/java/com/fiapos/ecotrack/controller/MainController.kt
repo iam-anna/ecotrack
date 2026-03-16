@@ -23,4 +23,8 @@ class MainController(
     fun goToFood() {
         navController.navigate(Routes.Food.route)
     }
+
+    fun goToHistory() {
+        navController.navigate(Routes.History.route)
+    }
 }
