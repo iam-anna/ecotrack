@@ -19,4 +19,8 @@ class MainController(
     fun goToTransport() {
         navController.navigate(Routes.Transport.route)
     }
+
+    fun goToFood() {
+        navController.navigate(Routes.Food.route)
+    }
 }
