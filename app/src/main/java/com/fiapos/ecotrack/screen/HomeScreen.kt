@@ -128,7 +128,7 @@ fun HomeScreen(controller: MainController) {
                         "Calcular Alimentação",
                         "Carne, vegetais e industrializados",
                         EcotrackColor.GREEN,
-                        onClick = { controller.goToHome() }
+                        onClick = { controller.goToFood() }
                     )
 
                     ArrowShapedButton(

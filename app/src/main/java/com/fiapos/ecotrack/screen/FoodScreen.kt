@@ -18,7 +18,7 @@ import com.fiapos.ecotrack.viewmodel.FoodImpactViewModel
 import com.fiapos.ecotrack.viewmodel.FoodResult
 
 @Composable
-fun FoodImpactScreen(
+fun FoodScreen(
     modifier: Modifier = Modifier
 ) {
 

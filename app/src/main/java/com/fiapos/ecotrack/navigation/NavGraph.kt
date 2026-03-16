@@ -9,6 +9,7 @@ import com.fiapos.ecotrack.controller.MainController
 import com.fiapos.ecotrack.screen.HomeScreen
 import com.fiapos.ecotrack.screen.OnboardingScreen
 import com.fiapos.ecotrack.service.MainService
+import com.fiapos.ecotrack.ui.screen.FoodScreen
 
 @Composable
 fun NavGraph() {
@@ -30,6 +31,10 @@ fun NavGraph() {
 
         composable(Routes.Transport.route) {
             TransportActivity(controller, service)
+        }
+
+        composable(Routes.Food.route) {
+            FoodScreen()
         }
     }
 }
