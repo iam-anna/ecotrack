@@ -47,7 +47,7 @@ fun OnboardingScreen(controller: MainController) {
 
             Spacer(modifier = Modifier.height(60.dp))
 
-            Header()
+            HeaderOnboarding()
 
             Spacer(modifier = Modifier.weight(0.45f))
 
@@ -91,7 +91,7 @@ fun OnboardingScreen(controller: MainController) {
 }
 
 @Composable
-fun Header() {
+fun HeaderOnboarding() {
 
     Row(
         verticalAlignment = Alignment.CenterVertically

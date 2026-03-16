@@ -424,10 +424,16 @@ fun ReportTransport(footprint: String) {
             }
         }
 
-        Row(modifier = Modifier.padding(all = 20.dp)) {
-
-            Text(text = "🌳", fontSize = 24.sp)
-
+        Row (
+            modifier = Modifier.padding(
+                top = 16.dp,
+                start = 16.dp,
+                end = 16.dp,
+                bottom = 24.dp
+            ),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(text = "🌳", fontSize = 24.sp,)
             Text(
                 text = "Equivale a plantar ${trees} árvores para compensar esta emissão mensal",
                 fontSize = 14.sp,

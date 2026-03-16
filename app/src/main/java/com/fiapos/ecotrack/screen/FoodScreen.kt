@@ -3,133 +3,87 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.fiapos.ecotrack.viewmodel.FoodImpactViewModel
+import com.fiapos.ecotrack.controller.MainController
+import com.fiapos.ecotrack.service.MainService
+import com.fiapos.ecotrack.ui.EcotrackColor
+import com.fiapos.ecotrack.ui.components.Header
+import com.fiapos.ecotrack.ui.components.PersonalizedButton
 import com.fiapos.ecotrack.viewmodel.FoodResult
 
 @Composable
-fun FoodScreen(
-    modifier: Modifier = Modifier
-) {
-
-    val viewModel: FoodImpactViewModel = viewModel()
-    val result by viewModel.result.collectAsState()
+fun FoodScreen(controller: MainController, service: MainService) {
+    var result by remember { mutableStateOf<FoodResult?>(null) }
     var meat by remember { mutableStateOf(3) }
     var vegetables by remember { mutableStateOf(3) }
     var processed by remember { mutableStateOf(1) }
     val scrollState = rememberScrollState()
 
-    val gradient = Brush.verticalGradient(
-        colors = listOf(
-            Color(0xFFA7D7B8),
-            Color(0xFFBFE3D0))
-    )
+    Column(modifier = Modifier.fillMaxSize().verticalScroll(scrollState)) {
+        Header(
+            title = "Impacto da Alimentação",
+            subtitle = "Calculadora",
+            emoji = "🥦",
+            action = { controller.goToHome() },
+            color = EcotrackColor.GREEN
+        )
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color(0xFFF3F4F6)))
-    {
-
-        HeaderSection(gradient)
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(scrollState)
-                .padding(horizontal = 16.dp)
+        Column(modifier = Modifier
+            .padding(
+                top = 20.dp,
+                start = 24.dp,
+                end = 24.dp,
+                bottom = 80.dp
+            ),
+            verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            Spacer(modifier = Modifier.height(16.dp))
 
             Text(
                 text = "Selecione a frequência de consumo de cada grupo alimentar por semana:",
-                fontSize = 14.sp,
+                fontSize = 12.sp,
                 color = Color(0xFF6B7280)
             )
-            Spacer(modifier = Modifier.height(16.dp))
 
             FoodCard(
                 emoji = "🥩",
                 title = "Carne Vermelha / Frango",
                 selectedColor = Color(0xFFF97316),
-                onValueChange = { meat = it })
-            Spacer(modifier = Modifier.height(16.dp))
+                value = meat,
+                onValueChange = { meat = it }
+            )
 
             FoodCard(
                 emoji = "🥗",
                 title = "Vegetais e Frutas",
                 selectedColor = Color(0xFF22C55E),
+                value = vegetables,
                 onValueChange = { vegetables = it }
             )
-            Spacer(modifier = Modifier.height(16.dp))
 
             FoodCard(
                 emoji = "🏭",
                 title = "Industrializados / Processados",
                 selectedColor = Color(0xFF8B5CF6),
+                value = processed,
                 onValueChange = { processed = it }
             )
-            Spacer(modifier = Modifier.height(24.dp))
 
-            CalculateButton {
-                viewModel.calculate(
-                    meat = meat,
-                    vegetables = vegetables,
-                    processed = processed
-                )
-
+            PersonalizedButton("Calcular Impacto") {
+                result = service.calculateFoodService(meat, vegetables, processed)
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
             result?.let { ResultCard(it) }
-            Spacer(modifier = Modifier.height(40.dp))
-            BottomNavigationBar()
-        }
-    }
-}
-
-@Composable
-fun HeaderSection(gradient: Brush) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(gradient)
-            .padding(20.dp)
-    ) {
-
-        Text(
-            text = "‹ Voltar",
-            color = Color(0xFF166534),
-            fontSize = 14.sp
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text("🥦", fontSize = 32.sp)
-            Spacer(modifier = Modifier.width(10.dp))
-
-            Column {
-
-                Text(
-                    text = "Calculadora",
-                    color = Color(0xFF15803D),
-                    fontSize = 14.sp
-                )
-                Text(
-                    text = "Impacto da Alimentação",
-                    color = Color(0xFF14532D),
-                    fontSize = 20.sp
-                )
-            }
         }
     }
 }
@@ -139,30 +93,38 @@ fun FoodCard(
     emoji: String,
     title: String,
     selectedColor: Color,
+    value: Int,
     onValueChange: (Int) -> Unit
 ) {
     Card(
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFFFFF)),
         modifier = Modifier.fillMaxWidth()
     ) {
-
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-
-                Text(emoji, fontSize = 28.sp)
-                Spacer(modifier = Modifier.width(10.dp))
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Text(emoji, fontSize = 24.sp)
 
                 Text(
                     text = title,
-                    fontSize = 16.sp)
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF374151)
+                )
             }
 
-            Spacer(modifier = Modifier.height(14.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
-            FrequencyButtons(selectedColor, onValueChange)
+            FrequencyButtons(
+                selectedColor = selectedColor,
+                value = value,
+                onValueChange = onValueChange
+            )
         }
     }
 }
@@ -170,9 +132,10 @@ fun FoodCard(
 @Composable
 fun FrequencyButtons(
     selectedColor: Color,
+    value: Int,
     onValueChange: (Int) -> Unit
 ) {
-    var selected by remember { mutableStateOf("3-4") }
+
     val options = listOf(
         "0" to 0,
         "1-2" to 1,
@@ -183,11 +146,12 @@ fun FrequencyButtons(
 
     Column {
         Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
             modifier = Modifier.fillMaxWidth()
         ) {
             options.forEach { option ->
-                val isSelected = selected == option.first
+                val isSelected = value == option.second
+
                 Box(
                     modifier = Modifier
                         .background(
@@ -195,19 +159,21 @@ fun FrequencyButtons(
                             RoundedCornerShape(20.dp)
                         )
                         .clickable {
-                            selected = option.first
                             onValueChange(option.second)
                         }
-                        .padding(horizontal = 16.dp, vertical = 10.dp)
+                        .padding(vertical = 8.dp)
+                        .weight(1f),
+                    contentAlignment = Alignment.Center
                 ) {
                     Text(
                         text = option.first,
-                        color = if (isSelected) Color.White else Color(0xFF6B7280)
+                        color = if (isSelected) Color.White else Color(0xFF6B7280),
+                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                     )
                 }
             }
         }
-        Spacer(modifier = Modifier.height(4.dp))
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
@@ -216,7 +182,9 @@ fun FrequencyButtons(
             Text(
                 text = "dias/semana",
                 fontSize = 10.sp,
-                color = Color(0xFF9CA3AF))
+                color = Color(0xFF9CA3AF)
+            )
+
             Text(
                 text = "todos os dias",
                 fontSize = 10.sp,
@@ -227,60 +195,121 @@ fun FrequencyButtons(
 }
 
 @Composable
-fun CalculateButton(
-    onClick: () -> Unit
-) {
-    Button(
-        onClick = onClick,
-        modifier = Modifier
+fun ReportTransport(footprint: String) {
+    Column(modifier = Modifier.background(
+        color = Color(0xFFF0F9FF),
+        shape = RoundedCornerShape(24.dp)
+    )){
+        Column (modifier = Modifier
             .fillMaxWidth()
-            .height(60.dp),
-        shape = RoundedCornerShape(20.dp),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = Color(0xFF16A34A)
-        )
-    ) {
-        Text(
-            text = "Calcular Emissão",
-            fontSize = 18.sp,
-            color = Color.White
-        )
+            .background(
+                brush = Brush.linearGradient(
+                    colors = listOf(
+                        Color(0xFF0EA5E9),
+                        Color(0xFF0369A1)
+                    ),
+                    start = Offset(0f, 0f),
+                    end = Offset(300f, 300f) // cria o efeito diagonal ~135°
+                ),
+                shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
+            )
+            .padding(all = 20.dp),
+        ) {
+            Text(
+                text = "Emissão mensal estimada",
+                fontSize = 12.sp,
+                color = Color(0xCCFFFFFF)
+            )
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.Bottom
+            ) {
+                Text(
+                    text = footprint,
+                    fontSize = 46.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFFFFFFFF)
+                )
+
+                Text(
+                    text = "kg CO₂",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color(0xCCFFFFFF)
+                )
+            }
+
+            Text(
+                text = "por mês · 11 km/dia",
+                fontSize = 12.sp,
+                color = Color(0xCCFFFFFF)
+            )
+        }
+
+        Row (modifier = Modifier.padding(all = 20.dp)) {
+            Text(text = "🌳", fontSize = 24.sp,)
+            Text(
+                text = "Equivale a plantar 5 árvores para compensar esta emissão mensal",
+                fontSize = 14.sp,
+                color = Color(0xFF0C4A6E)
+            )
+        }
     }
 }
 
+
 @Composable
 fun ResultCard(result: FoodResult) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
+    Column (modifier = Modifier.background(
+        color = Color(0xFFF0F9FF),
         shape = RoundedCornerShape(24.dp)
-    ) {
+    )) {
+        Column(modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                brush = Brush.linearGradient(
+                    colors = listOf(
+                        Color(0xFF22C55E),
+                        Color(0xFF059669)
+                    ),
+                    start = Offset(0f, 0f),
+                    end = Offset(300f, 300f)
+                ),
+                shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
+            )
+            .padding(20.dp)
+        ) {
+            Text(
+                text = "Emissão alimentar mensal",
+                fontSize = 12.sp,
+                color = Color(0xCCFFFFFF)
+            )
 
-        Column {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color(0xFF16A34A))
-                    .padding(20.dp)
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.Bottom
             ) {
+                Text(
+                    text = result.total.toInt().toString(),
+                    fontSize = 46.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFFFFFFFF)
+                )
 
-                Text("Emissão alimentar mensal", color = Color.White)
-                Spacer(modifier = Modifier.height(6.dp))
-                Row(verticalAlignment = Alignment.Bottom) {
-                    Text(
-                        text = result.total.toInt().toString(),
-                        fontSize = 40.sp,
-                        color = Color.White
-                    )
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Text("kg CO₂", color = Color.White)
-                }
+                Text(
+                    text = "kg CO₂",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color(0xCCFFFFFF)
+                )
+            }
 
                 Spacer(modifier = Modifier.height(12.dp))
                 Surface(
-                    color = Color(0xFF34D399),
+                    color = Color(0x33FFFFFF),
                     shape = RoundedCornerShape(20.dp)
                 ) {
-
                     Text(
                         text = "Nível: ${result.level}",
                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
@@ -308,19 +337,27 @@ fun ResultCard(result: FoodResult) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color(0xFFE6F4EA))
-                    .padding(16.dp)
+                    .background(
+                        color = Color(0xFFE6F4EA),
+                        shape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp)
+                    )
+                    .padding(
+                        top = 16.dp,
+                        start = 16.dp,
+                        end = 16.dp,
+                        bottom = 24.dp
+                    ),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
 
-                Text("🌱")
-                Spacer(modifier = Modifier.width(8.dp))
+                Text(text = "🌱", fontSize = 24.sp,)
                 Text(
                     text = result.recommendation,
-                    color = Color(0xFF166534)
+                    fontSize = 14.sp,
+                    color = Color(0xFF0C4A6E)
                 )
             }
         }
-    }
 }
 
 @Composable
@@ -330,7 +367,6 @@ fun ImpactRow(
     value: Double,
     color: Color
 ) {
-
     Column {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(emoji)
@@ -353,39 +389,6 @@ fun ImpactRow(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(6.dp)
-        )
-    }
-}
-
-@Composable
-fun BottomNavigationBar() {
-    NavigationBar {
-        NavigationBarItem(
-            selected = false,
-            onClick = { },
-            icon = { Text("🏠") },
-            label = { Text("Início") }
-        )
-
-        NavigationBarItem(
-            selected = false,
-            onClick = { },
-            icon = { Text("🚗") },
-            label = { Text("Transporte") }
-        )
-
-        NavigationBarItem(
-            selected = true,
-            onClick = { },
-            icon = { Text("🥦") },
-            label = { Text("Alimentação") }
-        )
-
-        NavigationBarItem(
-            selected = false,
-            onClick = { },
-            icon = { Text("📊") },
-            label = { Text("Histórico") }
         )
     }
 }

@@ -34,7 +34,7 @@ fun NavGraph() {
         }
 
         composable(Routes.Food.route) {
-            FoodScreen()
+            FoodScreen(controller, service)
         }
     }
 }
