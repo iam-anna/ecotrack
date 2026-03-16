@@ -53,8 +53,8 @@ fun Header(
         EcotrackColor.PURPLE -> {
             titleColor = Color(0xFF4C1D95)
             subTitleColor = Color(0xFF7C3AED)
-            linearColor1 = Color(0xFFF3E8FF)
-            linearColor2 = Color(0xFFDDD6FE)
+            linearColor1 = Color(0xFFF5F3FF)
+            linearColor2 = Color(0xFFEDE9FE)
         }
     }
 
