@@ -172,7 +172,10 @@ fun FootprintCard(progress: Float) {
                     color = Color(0xFF6B7280)
                 )
 
-                Row(verticalAlignment = Alignment.Bottom) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.Bottom
+                ) {
                     Text(
                         text = "142",
                         fontSize = 40.sp,

@@ -8,11 +8,13 @@ import com.fiapos.ecotrack.TransportActivity
 import com.fiapos.ecotrack.controller.MainController
 import com.fiapos.ecotrack.screen.HomeScreen
 import com.fiapos.ecotrack.screen.OnboardingScreen
+import com.fiapos.ecotrack.service.MainService
 
 @Composable
 fun NavGraph() {
     val navController = rememberNavController()
     val controller = MainController(navController)
+    val service = MainService()
 
     NavHost(
         navController = navController,
@@ -27,7 +29,7 @@ fun NavGraph() {
         }
 
         composable(Routes.Transport.route) {
-            TransportActivity(controller)
+            TransportActivity(controller, service)
         }
     }
 }
