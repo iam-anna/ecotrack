@@ -24,14 +24,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fiapos.ecotrack.ui.EcotrackColor
 
-
 @Composable
-fun ArrowShapedButton(
-    emoji: String,
+fun Header(
     title: String,
     subtitle: String,
-    color: EcotrackColor,
-    onClick: () -> Unit
+    emoji: String,
+    action: () -> Unit,
+    color: EcotrackColor
 ) {
     val titleColor: Color
     val subTitleColor: Color
@@ -59,35 +58,47 @@ fun ArrowShapedButton(
         }
     }
 
-    Button(
-        modifier = Modifier.padding(all = 0.dp),
-        onClick = onClick,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = Color.Transparent,
-
-        ),
-        shape = RoundedCornerShape(16.dp),
-        contentPadding = PaddingValues(0.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(
-                    brush = Brush.linearGradient(
-                        colors = listOf(
-                            linearColor1,
-                            linearColor2
-                        ),
-                        start = Offset(0f, 0f),
-                        end = Offset(300f, 300f) // cria o efeito diagonal ~135°
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                brush = Brush.linearGradient(
+                    colors = listOf(
+                        linearColor1,
+                        linearColor2
                     ),
-                    shape = RoundedCornerShape(16.dp)
-                )
-                .padding(all = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    start = Offset(0f, 0f),
+                    end = Offset(300f, 300f) // cria o efeito diagonal ~135°
+                ),
+            )
+            .padding(
+                top = 48.dp,
+                start = 24.dp,
+                end = 24.dp,
+                bottom = 20.dp
+            )
+    ){
+        Button(
+            modifier = Modifier.padding(all = 0.dp),
+            onClick = action,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Transparent
+            ),
+            contentPadding = PaddingValues(0.dp)
+        ) {
+            Text(
+                text = "‹ Voltar",
+                color = subTitleColor,
+                fontSize = 16.sp,
+            )
+        }
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Box(modifier = Modifier
-                .size(48.dp)
+                .size(40.dp)
                 .background(
                     color = Color(0x99FFFFFF),
                     shape = RoundedCornerShape(16.dp)
@@ -97,18 +108,20 @@ fun ArrowShapedButton(
                 Text(emoji, fontSize = 24.sp)
             }
 
-            Column (verticalArrangement = Arrangement.spacedBy(0.dp)) {
+            Column (
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 Text(
-                    text = title,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = titleColor
+                    text = subtitle,
+                    color = subTitleColor,
+                    fontSize = 12.sp
                 )
 
                 Text(
-                    text = subtitle,
-                    fontSize = 12.sp,
-                    color = subTitleColor
+                    text = title,
+                    color = titleColor,
+                    fontWeight = FontWeight.ExtraBold,
+                    fontSize = 20.sp
                 )
             }
         }

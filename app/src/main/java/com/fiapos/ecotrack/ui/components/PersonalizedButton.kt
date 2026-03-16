@@ -30,7 +30,8 @@ fun PersonalizedButton(
         shape = RoundedCornerShape(16.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.Transparent
-        )
+        ),
+        contentPadding = PaddingValues(0.dp)
     ) {
         Box(modifier = Modifier
             .fillMaxSize()
