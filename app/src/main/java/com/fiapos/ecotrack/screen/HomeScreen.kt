@@ -307,7 +307,7 @@ fun Callout() {
             Text("💡", fontSize = 20.sp)
         }
         Text(
-            text = "**Dica do dia:** Reduzir o consumo de carne vermelha 2x por semana pode diminuir até 15% da sua pegada de carbono alimentar.",
+            text = "Dica do dia: Reduzir o consumo de carne vermelha 2x por semana pode diminuir até 15% da sua pegada de carbono alimentar.",
             fontSize = 12.sp,
             color = Color(0xFF92400E)
         )

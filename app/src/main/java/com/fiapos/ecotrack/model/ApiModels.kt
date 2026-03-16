@@ -1,4 +1,4 @@
-package com.fiapos.ecotrack.domain.model
+package com.fiapos.ecotrack.model
 
 data class EstimateRequest(
     val emission_factor: EmissionFactor,

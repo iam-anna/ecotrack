@@ -8,27 +8,25 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Divider
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.fiapos.ecotrack.controller.MainController
-import com.fiapos.ecotrack.domain.model.EmissionFactor
-import com.fiapos.ecotrack.domain.model.EstimateRequest
-import com.fiapos.ecotrack.domain.model.Parameters
+import com.fiapos.ecotrack.model.EmissionFactor
+import com.fiapos.ecotrack.model.EstimateRequest
+import com.fiapos.ecotrack.model.Parameters
 import com.fiapos.ecotrack.service.MainService
-import com.fiapos.ecotrack.services.RetrofitClient
+import com.fiapos.ecotrack.service.RetrofitClient
 import com.fiapos.ecotrack.ui.EcotrackColor
 import com.fiapos.ecotrack.ui.components.Header
 import com.fiapos.ecotrack.ui.components.PersonalizedButton
@@ -38,7 +36,7 @@ import kotlin.math.ceil
 var trees : Int = 0
 
 @Composable
-fun TransportActivity(controller: MainController, service: MainService) {
+fun TransportScreen(controller: MainController, service: MainService) {
 
     var km by remember { mutableStateOf("") }
     var transport by remember { mutableStateOf("car") }
@@ -63,7 +61,7 @@ fun TransportActivity(controller: MainController, service: MainService) {
                 top = 20.dp,
                 start = 24.dp,
                 end = 24.dp,
-                bottom = 42.dp
+                bottom = 80.dp
             ),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
@@ -99,7 +97,6 @@ fun TransportActivity(controller: MainController, service: MainService) {
                 scope.launch(Dispatchers.IO) {
 
                     try {
-
                         val request = EstimateRequest(
                             emission_factor = EmissionFactor(
                                 activity_id = activityId
@@ -154,59 +151,6 @@ fun getActivityId(type: String): String {
 
         else ->
             "passenger_vehicle-vehicle_type_medium_car-fuel_source_diesel-engine_size_na-vehicle_age_na-vehicle_weight_na"
-    }
-}
-
-@Composable
-fun TabBarButton(icon: String = "🔴", text: String = "Default", selected: Boolean = false) {
-
-    val selectedColor = if (selected) Color(22, 163, 74) else Color(0xFF0369A1)
-    val fontWeight = if (selected) FontWeight(800) else FontWeight(400)
-
-    Column(
-        modifier = Modifier
-            .height(80.dp)
-            .width(80.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-
-        Text(
-            text = icon,
-            fontSize = 20.sp
-        )
-
-        Spacer(modifier = Modifier.height(5.dp))
-
-        Text(
-            text = text,
-            fontSize = 12.sp,
-            color = selectedColor,
-            fontWeight = fontWeight
-        )
-    }
-}
-
-@Composable
-fun TabBar() {
-
-    Divider(
-        color = Color.Gray,
-        thickness = 1.dp
-    )
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(100.dp),
-        horizontalArrangement = Arrangement.SpaceEvenly,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-
-        TabBarButton(icon = "🏠", text = "Início")
-        TabBarButton(icon = "🚗", text = "Transporte", selected = true)
-        TabBarButton(icon = "🥦", text = "Alimentação")
-        TabBarButton(icon = "📊", text = "Histórico")
     }
 }
 
@@ -424,10 +368,16 @@ fun ReportTransport(footprint: String) {
             }
         }
 
-        Row(modifier = Modifier.padding(all = 20.dp)) {
-
-            Text(text = "🌳", fontSize = 24.sp)
-
+        Row (
+            modifier = Modifier.padding(
+                top = 16.dp,
+                start = 16.dp,
+                end = 16.dp,
+                bottom = 24.dp
+            ),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(text = "🌳", fontSize = 24.sp,)
             Text(
                 text = "Equivale a plantar ${trees} árvores para compensar esta emissão mensal",
                 fontSize = 14.sp,
