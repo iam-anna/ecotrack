@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.fiapos.ecotrack.TransportActivity
+import com.fiapos.ecotrack.TransportScreen
 import com.fiapos.ecotrack.controller.MainController
 import com.fiapos.ecotrack.screen.HomeScreen
 import com.fiapos.ecotrack.screen.OnboardingScreen
@@ -30,7 +30,7 @@ fun NavGraph() {
         }
 
         composable(Routes.Transport.route) {
-            TransportActivity(controller, service)
+            TransportScreen(controller, service)
         }
 
         composable(Routes.Food.route) {

@@ -1,7 +1,7 @@
 package com.fiapos.ecotrack.service
 
-import com.fiapos.ecotrack.domain.model.EstimateRequest
-import com.fiapos.ecotrack.domain.model.EstimateResponse
+import com.fiapos.ecotrack.model.EstimateRequest
+import com.fiapos.ecotrack.model.EstimateResponse
 import retrofit2.http.Body
 import retrofit2.http.Headers
 import retrofit2.http.POST
