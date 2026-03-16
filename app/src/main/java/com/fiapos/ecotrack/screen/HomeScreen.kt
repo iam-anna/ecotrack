@@ -14,15 +14,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.fiapos.ecotrack.controller.MainController
+import com.fiapos.ecotrack.ui.EcotrackColor
 import com.fiapos.ecotrack.ui.components.ArrowShapedButton
-import com.fiapos.ecotrack.ui.components.ArrowShapedButtonColor
 import com.fiapos.ecotrack.ui.components.CategoryProgressCard
 import com.fiapos.ecotrack.ui.components.EcotrackLogo
 import com.fiapos.ecotrack.ui.components.FootprintRegisterType
 
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(controller: MainController) {
     var progress = 0.35f
 
     Column (modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState())) {
@@ -118,21 +119,24 @@ fun HomeScreen() {
                         "🚗",
                         "Calcular Transporte",
                         "Carros, motos, ônibus e mais",
-                        ArrowShapedButtonColor.BLUE
+                        EcotrackColor.BLUE,
+                        onClick = { controller.goToTransport() }
                     )
 
                     ArrowShapedButton(
                         "🥦",
                         "Calcular Alimentação",
                         "Carne, vegetais e industrializados",
-                        ArrowShapedButtonColor.GREEN
+                        EcotrackColor.GREEN,
+                        onClick = { controller.goToHome() }
                     )
 
                     ArrowShapedButton(
                         "📊",
                         "Ver Histórico",
                         "Relatórios e progresso",
-                        ArrowShapedButtonColor.PURPLE
+                        EcotrackColor.PURPLE,
+                        onClick = { controller.goToHome() }
                     )
                 }
             }
