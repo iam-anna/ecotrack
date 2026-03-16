@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,13 +26,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fiapos.ecotrack.controller.MainController
 import com.fiapos.ecotrack.ui.EcotrackColor
+import androidx.compose.material3.LinearProgressIndicator
 import com.fiapos.ecotrack.ui.components.Header
 
 @Composable
 fun HistoryScreen(controller: MainController) {
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .verticalScroll(rememberScrollState())) {
+    Column(modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
         Header(
             title = "Seu Histórico Ambiental",
             subtitle = "Relatórios",
@@ -41,312 +39,247 @@ fun HistoryScreen(controller: MainController) {
             action = { controller.goToHome() },
             color = EcotrackColor.PURPLE
         )
-        ReportSection()
-        HistorySection()
-        Spacer(modifier = Modifier.weight(1f))
-    }
-}
 
-//var textColors = Color(76, 29, 149)
-//@Composable
-//fun Header() {
-//    Box(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .height(150.dp)
-//    ) {
-//        Column {
-//            Text(
-//                text = "‹ Voltar",
-//                color = textColors,
-//                fontSize = 16.sp,
-//                modifier = Modifier
-//                    .padding(horizontal = 20.dp, vertical = 20.dp)
-//            )
-//
-//            Spacer(modifier = Modifier.height(15.dp))
-//
-//            Row(
-//                verticalAlignment = Alignment.CenterVertically
-//            ) {
-//                Column (
-//                    modifier = Modifier
-//                        .height(100.dp)
-//                        .width(80.dp),
-//                    horizontalAlignment = Alignment.CenterHorizontally,
-//                    verticalArrangement = Arrangement.Top
-//                ) {
-//                    Text(
-//                        text = "📊",
-//                        color = Color(red = 3, green = 105, blue = 161),
-//                        fontSize = 20.sp,
-//                        modifier = Modifier
-//                            .background(color = Color.White, shape = RoundedCornerShape(12.dp))
-//                            .padding(10.dp)
-//
-//                    )
-//                }
-//
-//                Column (
-//                    modifier = Modifier.fillMaxWidth().height(100.dp)
-//                ) {
-//                    Text(
-//                        text = "Relatórios",
-//                        color = textColors,
-//                        fontSize = 12.sp
-//                    )
-//
-//                    Text(
-//                        text = "Seu Histórico Ambiental",
-//                        color = textColors,
-//                        fontWeight = FontWeight(800),
-//                        fontSize = 20.sp
-//                    )
-//                }
-//            }
-//        }
-//    }
-//}
-//
-//@Composable
-//fun TabBarButton(icon: String = "🔴", text: String = "Default", selected: Boolean = false) {
-//    var selectedColor = if (selected) Color(22, 163, 74) else textColors
-//    var fontWeight = if (selected) FontWeight(800) else FontWeight(400)
-//
-//    Column (
-//        modifier = Modifier
-//            .height(80.dp)
-//            .width(80.dp),
-//        horizontalAlignment = Alignment.CenterHorizontally,
-//        verticalArrangement = Arrangement.Center
-//    ) {
-//        Text(
-//            text = icon,
-//            fontSize = 20.sp
-//        )
-//        Spacer(
-//            modifier = Modifier.height(5.dp)
-//        )
-//        Text(
-//            text = text,
-//            fontSize = 12.sp,
-//            color = selectedColor,
-//            fontWeight = fontWeight
-//        )
-//    }
-//}
-
-//@Composable
-//fun TabBar() {
-//    Divider(
-//        color = Color.Gray,
-//        thickness = 1.dp
-//    )
-//    Row (
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .height(100.dp),
-//        horizontalArrangement = Arrangement.SpaceEvenly,
-//        verticalAlignment = Alignment.CenterVertically
-//    ) {
-//        TabBarButton(icon = "🏠", text = "Início")
-//        TabBarButton(icon = "🚗", text = "Transporte")
-//        TabBarButton(icon = "🥦", text = "Alimentação")
-//        TabBarButton(icon = "📊", text = "Histórico", selected = true)
-//    }
-//}
-
-@Composable
-fun ReportSection() {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(150.dp)
-    ) {
-        Row(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(20.dp)
-        ) {
-            Column (
-                modifier = Modifier
-                    .height(100.dp)
-                    .weight(1f)
-                    .border(0.5.dp, color = Color.Gray, shape = RoundedCornerShape(16.dp))
-                    .padding(12.dp),
-                horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.Top
-            ) {
-                Text(
-                    text = "Média mensal",
-                    color = Color.Gray,
-                    fontSize = 12.sp
+                .padding(
+                    top = 12.dp,
+                    start = 24.dp,
+                    end = 24.dp,
+                    bottom = 80.dp
                 )
-                Text(
-                    text = "153 kg",
-                    color = Color.Black,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight(800)
+        ){
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ){
+                ReportCard(
+                    label = "Média mensal",
+                    value = "153",
+                    valueType = "kg",
+                    subtitle = "CO₂ / mês",
+                    modifier = Modifier.weight(1f)
                 )
-                Text(
-                    text = "CO₂ / mês",
-                    color = Color.Gray,
-                    fontSize = 12.sp
+
+                ReportCard(
+                    label = "Economizado",
+                    value = "25",
+                    valueType = "kg",
+                    subtitle = "vs. 3 meses atrás",
+                    valueColor = Color(0xFF16A34A),
+                    modifier = Modifier.weight(1f)
                 )
             }
 
-            Column (
-                modifier = Modifier
-                    .height(100.dp)
-                    .weight(1f)
-                    .border(0.5.dp, color = Color.Gray, shape = RoundedCornerShape(16.dp))
-                    .padding(12.dp),
-                horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.Top
-            ) {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(
-                    text = "Economizado",
-                    color = Color.Gray,
-                    fontSize = 12.sp
+                    text = "Breakdown por Categoria",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF374151)
                 )
-                Text(
-                    text = "25 kg",
-                    color = Color.Green,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight(800)
+
+                MonthlyReportCard(
+                    month = "Março 2026",
+                    totalCO2 = 142,
+                    transport = 87,
+                    food = 55,
                 )
-                Text(
-                    text = "vs. 3 meses atrás",
-                    color = Color.Gray,
-                    fontSize = 12.sp
+
+                MonthlyReportCard(
+                    month = "Fevereiro 2026",
+                    totalCO2 = 154,
+                    transport = 95,
+                    food = 59,
+                )
+
+                MonthlyReportCard(
+                    month = "Janeiro 2026",
+                    totalCO2 = 147,
+                    transport = 91,
+                    food = 56,
+                )
+
+                MonthlyReportCard(
+                    month = "Dezemrbro 2025",
+                    totalCO2 = 167,
+                    transport = 102,
+                    food = 65,
+                )
+
+                MonthlyReportCard(
+                    month = "Fevereiro 2026",
+                    totalCO2 = 154,
+                    transport = 95,
+                    food = 59,
                 )
             }
+
         }
     }
 }
 
 @Composable
-fun HistorySection() {
+fun ReportCard(
+    label: String,
+    value: String,
+    valueType: String,
+    valueColor: Color = Color(0xFF111827),
+    subtitle: String,
+    modifier: Modifier = Modifier
+) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(0.75f)
+        modifier = modifier
+            .border(
+                width = 1.dp,
+                color = Color(0xFFF3F4F6),
+                shape = RoundedCornerShape(16.dp)
+            )
+            .background(
+                color = Color.White,
+                shape = RoundedCornerShape(16.dp)
+            )
             .padding(16.dp)
     ) {
-//        Text(
-//            text = "Relatórios",
-//            color = textColors,
-//            fontSize = 12.sp
-//        )
-//
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(20.dp)
-        ) {
-            Column (
-                modifier = Modifier
-                    .height(100.dp)
-                    .weight(1f)
-                    .border(0.5.dp, color = Color.Gray, shape = RoundedCornerShape(16.dp))
-                    .padding(12.dp),
-                horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.Top
-            ) {
-                Text(
-                    text = "Março 2026 [Atual]",
-                    color = Color.Gray,
-                    fontSize = 12.sp
-                )
-                Text(
-                    text = "142 kg CO₂",
-                    color = Color.Black,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight(800)
-                )
-                Text(
-                    text = "🚗 87kg      🥦55kg",
-                    color = Color.Gray,
-                    fontSize = 12.sp
-                )
-            }
+        Text(
+            text = label,
+            fontSize = 12.sp,
+            color = Color(0xFF9CA3AF)
+        )
+
+        Spacer(modifier = Modifier.height(6.dp))
+
+        Row(verticalAlignment = Alignment.Bottom) {
+
+            Text(
+                text = value,
+                fontSize = 22.sp,
+                fontWeight = FontWeight.ExtraBold,
+                color = valueColor
+            )
+
+            Spacer(modifier = Modifier.width(4.dp))
+
+            Text(
+                text = valueType,
+                fontSize = 12.sp,
+                color = Color(0xFF9CA3AF)
+            )
         }
 
+        Spacer(modifier = Modifier.height(4.dp))
+
+        Text(
+            text = subtitle,
+            fontSize = 12.sp,
+            color = Color(0xFF6B7280)
+        )
+    }
+}
+
+@Composable
+fun MonthlyReportCard(
+    month: String,
+    totalCO2: Int,
+    transport: Int,
+    food: Int,
+    modifier: Modifier = Modifier
+) {
+
+    val total = transport + food
+    val transportProgress = transport.toFloat() / total
+    val foodProgress = food.toFloat() / total
+
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(
+                color = Color(0xFFF3F4F6),
+                shape = RoundedCornerShape(20.dp)
+            )
+            .padding(20.dp)
+    ) {
+
+        Text(
+            text = month,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = Color(0xFF374151)
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(20.dp)
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Column (
-                modifier = Modifier
-                    .height(100.dp)
-                    .weight(1f)
-                    .border(0.5.dp, color = Color.Gray, shape = RoundedCornerShape(16.dp))
-                    .padding(12.dp),
-                horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.Top
+
+            // Total CO2
+            Row(
+                verticalAlignment = Alignment.Bottom
             ) {
                 Text(
-                    text = "Fevereiro 2026",
-                    color = Color.Gray,
-                    fontSize = 12.sp
+                    text = "$totalCO2",
+                    fontSize = 36.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = Color(0xFF111827)
                 )
-                Text(
-                    text = "154 kg CO₂",
-                    color = Color.Black,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight(800)
-                )
-                Text(
-                    text = "🚗 95kg      🥦59kg",
-                    color = Color.Gray,
-                    fontSize = 12.sp
-                )
-            }
 
-        }
+                Spacer(modifier = Modifier.width(4.dp))
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(20.dp)
-        ) {
-            Column (
-                modifier = Modifier
-                    .height(100.dp)
-                    .weight(1f)
-                    .border(0.5.dp, color = Color.Gray, shape = RoundedCornerShape(16.dp))
-                    .padding(12.dp),
-                horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.Top
-            ) {
                 Text(
-                    text = "Janeiro 2026",
-                    color = Color.Gray,
-                    fontSize = 12.sp
-                )
-                Text(
-                    text = "147 kg CO₂",
-                    color = Color.Black,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight(800)
-                )
-                Text(
-                    text = "🚗 87kg      🥦55kg",
-                    color = Color.Gray,
-                    fontSize = 12.sp
+                    text = "kg CO₂",
+                    fontSize = 16.sp,
+                    color = Color(0xFF6B7280)
                 )
             }
 
+            // Breakdown
+            Column(
+                horizontalAlignment = Alignment.End
+            ) {
+                Text("🚗 $transport kg", fontSize = 14.sp)
+                Text("🥦 $food kg", fontSize = 14.sp)
+            }
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Transport
+        Text(
+            text = "Transporte",
+            fontSize = 12.sp,
+            color = Color(0xFF6B7280)
+        )
+
+        LinearProgressIndicator(
+            progress = transportProgress,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(6.dp),
+            color = Color(0xFF38BDF8),
+            trackColor = Color(0xFFE5E7EB)
+        )
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        // Food
+        Text(
+            text = "Alimentação",
+            fontSize = 12.sp,
+            color = Color(0xFF6B7280)
+        )
+
+        LinearProgressIndicator(
+            progress = foodProgress,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(6.dp),
+            color = Color(0xFF4ADE80),
+            trackColor = Color(0xFFE5E7EB)
+        )
     }
 }
